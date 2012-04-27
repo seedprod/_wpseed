@@ -48,7 +48,6 @@ class _WPSEED {
         if(!in_array($hook_suffix, $this->pages))
             return;
 
-        wp_enqueue_script( 'dashboard' );
     	wp_enqueue_script( 'seedprod-framework-js', _WPSEED_PLUGIN_URL . 'inc/js/setting-scripts.js', array( 'jquery','media-upload','thickbox','farbtastic' ), $this->plugin_version );
         wp_enqueue_style( 'thickbox' );
         wp_enqueue_style( 'farbtastic' ); 
@@ -245,72 +244,20 @@ class _WPSEED {
      * @since 0.1.0
      */
     function field_machine($args) {
-        extract($args);
+        extract($args); //$id, $desc, $setting_id, $class, $type, $default_value, $option_values
+         
     	$options = get_option( $setting_id );
-    	switch($type){
-    	    case 'textbox':
-    	        echo "<input id='$id' class='".(empty($class) ? 'regular-text' : $class)."' name='{$setting_id}[$id]' type='text' value='".esc_attr(empty($options[$id]) ? $default_value : $options[$id])."' />
-    	        <br><small class='description'>".(empty($desc) ? '' : $desc)."</small>";
-    	        break;
-            case 'image':
-    	        echo "<input id='$id' class='".(empty($class) ? 'regular-text' : $class)."' name='{$setting_id}[$id]' type='text' value='".(empty($options[$id]) ? $default_value : $options[$id])."' />
-    	        <input id='{$id}_upload_image_button' class='button-secondary upload-button' type='button' value='". __('Media Image Library', 'ultimate-coming-soon-page')."' />
-    	        <br><small class='description'>".(empty($desc) ? '' : $desc)."</small>
-                
 
-
-    	        ";
-    	        break;
-    	    case 'select':
-        	    echo "<select id='$id' class='".(empty($class) ? '' : $class)."' name='{$setting_id}[$id]'>";
-				foreach($option_values as $k=>$v){
-        	        if(preg_match("/optgroupend/i",$k)){
-        	            echo "</optgroup>";
-        	        }else{
-        	            if(preg_match("/optgroup/i",$k)){
-            	            echo "<optgroup label='$v'>";
-            	        }else{
-							
-            	            if(preg_match("/empty/i",$k) && empty($default_value)){             
-            	                echo "<option value=''>$v</option>";
-            	            }else{
-        	                    echo "<option value='$k' ".((preg_match("/empty/i",$options[$id] || isset($options[$id]) === false) ? $default_value : $options[$id]) == $k ? 'selected' : '').">$v</option>";
-    	                    }
-    	                }
-    	            }
-
-        	    }
-        	    echo "</select>
-                <br><small class='description'>".(empty($desc) ? '' : $desc)."</small>";
-                break;
-    	    case 'textarea':
-                echo "<textarea id='$id' class='".(empty($class) ? '' : $class)."' name='{$setting_id}[$id]'>".(empty($options[$id]) ? $default_value : $options[$id])."</textarea>
-    	        <br><small class='description'>".(empty($desc) ? '' : $desc)."</small>";
-    	        break;
-    	    case 'radio':
-    	        foreach($option_values as $k=>$v){
-    	            echo "<input type='radio' name='{$setting_id}[$id]' value='$k'".((empty($options[$id]) ? $default_value : $options[$id]) == $k ? 'checked' : '')."  /> $v<br/>";
-                }
-    	        echo "<small class='description'>".(empty($desc) ? '' : $desc)."</small>";
-    	        break;
-    	    case 'checkbox':
-    	        $count = 0;
-    	        foreach($option_values as $k=>$v){
-    	            echo "<input type='checkbox' name='{$setting_id}[$id][]' value='$k'".(in_array($k,(empty($options[$id]) ? (empty($default_value) ? array(): $default_value) : $options[$id])) ? 'checked' : '')."  /> $v<br/>";
-                    $count++;
-                }
-    	        echo "<small class='description'>".(empty($desc) ? '' : $desc)."</small>";
-    	        break;
-    	    case 'color':
-    	        echo "
-        	        <input id='$id' type='text' name='{$setting_id}[$id]' value='".(empty($options[$id]) ? $default_value : $options[$id])."' style='background-color:".(empty($options[$id]) ? $default_value : $options[$id]).";' />
-                    <input type='button' class='pickcolor button-secondary' value='Select Color'>
-                    <div id='colorpicker' style='z-index: 100; background:#eee; border:1px solid #ccc; position:absolute; display:none;'></div>
-                    <br />
-                    <small class='description'>".(empty($desc) ? '' : $desc)."</small>
-                    ";
-    	        break;
-    	}
+        $path = _WPSEED_PLUGIN_PATH.'framework/field-types/'.$type.'.php';
+        if(file_exists ( $path )){
+            // Show Field
+            require_once( $path );
+            // Show description
+            if(!empty($desc)){
+                echo "<br>";
+                echo "<small class='description'>{$desc}</small>";
+            }
+        }
 
     }
 
@@ -323,47 +270,43 @@ class _WPSEED {
      * @todo Figure out best way to validate values.
      */
     function validate_machine($input) {
-        $error = false;
-        var_dump($input);
+
         foreach ($this->options as $k) {
             switch($k['type']){
                 case 'setting':
-                    break;
                 case 'section':
+                case 'tab';
                     break;
-                default:
-                    // Validate a pattern
-                    if(isset($pattern) && $pattern){
-                	    if(!preg_match( $pattern, $input[$k['id']])) {
-                	        $error = true;
-                    		add_settings_error(
-                    			$k['id'],
-                    			'seedprod_error',
-                    			$k['error_msg'],
-                    			'error'
-                    		);
-                    		unset($input[$k['id']]);
-                    	}		
+                default:   
+                    if(!empty($k['validate']) ){
+
+                        $path = _WPSEED_PLUGIN_PATH.'framework/validations/'.$k['validate'].'.php';
+                        if(file_exists ( $path )){
+                            // Defaults Values
+                            $is_valid = false;
+                            $k['error_msg'] = '';
+
+                            // Test Validation
+                            require_once( $path );
+
+                            // Is it valid?
+                            if($is_valid === false){
+                                add_settings_error(
+                                    $k['id'],
+                                    'seedprod_error',
+                                    $k['error_msg'],
+                                    'error'
+                                );
+                                // unset invalids
+                                unset($input[$k['id']]);
+                            }
+
+                        }
+        
                     }
-                    // Sanitize 
-            	    if($k['type'] == 'image'){
-            	        $input[$k['id']] = esc_url_raw($input[$k['id']]);
-            	    }
     	    }
         }
-        if(!$error){
-        	global $wp_settings_errors;
-        	$display = true;
-        	if(!empty($wp_settings_errors)){
-        		foreach($wp_settings_errors as $k=>$v){
-        			if($v['code'] == 'seedprod_settings_updated')
-        				$display = false;
-        		}
-        	}
-	       if($display)
-            	add_settings_error('general', 'seedprod_settings_updated', sprintf(__("Settings saved.  <a href='%s/?cs_preview=true'>Preview &raquo;</a>", 'ultimate-coming-soon-page'),home_url()), 'updated');
-        }
-
+        
     	return $input;
     }
 

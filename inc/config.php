@@ -49,7 +49,7 @@ $_wpseed->options[] = array( "type" => "section",
 /**
  * Choose type, id, label, attache to a section and setting id.
  * Create 'callback' function if you are creating a custom field.
- * Optional desc, default value, class, option_values, pattern
+ * Optional desc, default_value, class, option_values, validate, validate_function
  * Types image,textbox,select,textarea,radio,checkbox,color,custom
  */
 $_wpseed->options[] = array( "type" => "textbox",
@@ -58,6 +58,7 @@ $_wpseed->options[] = array( "type" => "textbox",
 				"desc" => __("Enter your SeedProd API Key to receive automatic updates. The plugin will function with or without the API key.", 'ultimate-coming-soon-page'),
 				"section_id" => "seedprod_section_coming_soon",
 				"setting_id" => "seedprod_comingsoon_options",
+				"validate" => 'email',
 				);
 $_wpseed->options[] = array( "type" => "checkbox",
                 "id" => "comingsoon_enabled",
@@ -67,7 +68,7 @@ $_wpseed->options[] = array( "type" => "checkbox",
 				"section_id" => "seedprod_section_coming_soon",
 				"setting_id" => "seedprod_comingsoon_options",
 				);
-$_wpseed->options[] = array( "type" => "image",
+$_wpseed->options[] = array( "type" => "upload",
                 "id" => "comingsoon_image",
 				"label" => __("Image", 'ultimate-coming-soon-page'),
 				"desc" => __("Upload a logo or teaser image (or) enter the url to your image.", 'ultimate-coming-soon-page'),
@@ -162,7 +163,7 @@ $_wpseed->options[] = array( "type" => "color",
 				"default_value" => "#ffffff",
 				);
 				
-$_wpseed->options[] = array( "type" => "image",
+$_wpseed->options[] = array( "type" => "upload",
                 "id" => "comingsoon_custom_bg_image",
 				"label" => __("Background Image", 'ultimate-coming-soon-page'),
 				"section_id" => "seedprod_section_style",
@@ -216,7 +217,7 @@ $_wpseed->options[] = array( "type" => "textarea",
 				"desc" => __('Need to tweaks the styles? Add your custom CSS here.', 'ultimate-coming-soon-page'),
 				);
 				
-$_wpseed->options[] = array( "type" => "image",
+$_wpseed->options[] = array( "type" => "upload",
                 "id" => "comingsoon_custom_footer_credit",
 				"label" => __("Powered By", 'ultimate-coming-soon-page'),
 				"desc" => __("Upload your custom footer credit logo. Optimal Max Height 30px", 'ultimate-coming-soon-page'),
@@ -370,3 +371,9 @@ $_wpseed->options[] = array( "type" => "textbox",
 				"section_id" => "seedprod_section_coming_soon_2",
 				"setting_id" => "seedprod_comingsoon_options_2",
 				);
+
+
+function feed_test($input){
+
+	return false;
+}
