@@ -252,7 +252,7 @@ class _WPSEED {
         $path = _WPSEED_PLUGIN_PATH.'framework/field-types/'.$type.'.php';
         if(file_exists ( $path )){
             // Show Field
-            require_once( $path );
+            include( $path );
             // Show description
             if(!empty($desc)){
                 echo "<br>";
