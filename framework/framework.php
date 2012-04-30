@@ -48,8 +48,9 @@ class _WPSEED {
         if(!in_array($hook_suffix, $this->pages))
             return;
 
-    	wp_enqueue_script( 'seedprod-framework-js', _WPSEED_PLUGIN_URL . 'framework/setting-scripts.js', array( 'jquery','media-upload','thickbox','farbtastic' ), $this->plugin_version );
+    	wp_enqueue_script( 'seedprod-framework-js', _WPSEED_PLUGIN_URL . 'framework/settings-scripts.js', array( 'jquery' ), $this->plugin_version );
         wp_enqueue_style( 'thickbox' );
+        wp_enqueue_style( 'media-upload' );
         wp_enqueue_style( 'farbtastic' ); 
     	wp_enqueue_style( 'seedprod-framework-css', _WPSEED_PLUGIN_URL . 'framework/settings-style.css', false, $this->plugin_version );
     }
