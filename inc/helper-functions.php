@@ -1,2 +1,4 @@
 <?php
-// A place to put helper functions
+/**
+ * A place to put helper functions
+ */

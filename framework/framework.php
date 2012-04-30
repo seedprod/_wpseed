@@ -17,7 +17,7 @@ class _WPSEED {
      */
     public $menus = array();
 
-        /**
+    /**
      * Holds defined menus
      */
     public $pages = array();
@@ -48,10 +48,10 @@ class _WPSEED {
         if(!in_array($hook_suffix, $this->pages))
             return;
 
-    	wp_enqueue_script( 'seedprod-framework-js', _WPSEED_PLUGIN_URL . 'inc/js/setting-scripts.js', array( 'jquery','media-upload','thickbox','farbtastic' ), $this->plugin_version );
+    	wp_enqueue_script( 'seedprod-framework-js', _WPSEED_PLUGIN_URL . 'framework/setting-scripts.js', array( 'jquery','media-upload','thickbox','farbtastic' ), $this->plugin_version );
         wp_enqueue_style( 'thickbox' );
         wp_enqueue_style( 'farbtastic' ); 
-    	wp_enqueue_style( 'seedprod-framework-css', _WPSEED_PLUGIN_URL . 'inc/css/settings-style.css', false, $this->plugin_version );
+    	wp_enqueue_style( 'seedprod-framework-css', _WPSEED_PLUGIN_URL . 'framework/settings-style.css', false, $this->plugin_version );
     }
 
     /**
@@ -279,29 +279,31 @@ class _WPSEED {
                     break;
                 default:   
                     if(!empty($k['validate']) ){
+                        $validation_rules = explode(',',$k['validate']);
+                        foreach($validation_rules as $v){
+                            $path = _WPSEED_PLUGIN_PATH.'framework/validations/'.$v.'.php';
+                            if(file_exists ( $path )){
+                                // Defaults Values
+                                $is_valid = true;
+                                $error_msg = '';
 
-                        $path = _WPSEED_PLUGIN_PATH.'framework/validations/'.$k['validate'].'.php';
-                        if(file_exists ( $path )){
-                            // Defaults Values
-                            $is_valid = false;
-                            $k['error_msg'] = '';
+                                // Test Validation
+                                require_once( $path );
 
-                            // Test Validation
-                            require_once( $path );
+                                // Is it valid?
+                                if($is_valid === false){
+                                    add_settings_error(
+                                        $k['id'],
+                                        'seedprod_error',
+                                        $error_msg,
+                                        'error'
+                                    );
+                                    // unset invalids
+                                    unset($input[$k['id']]);
+                                }
 
-                            // Is it valid?
-                            if($is_valid === false){
-                                add_settings_error(
-                                    $k['id'],
-                                    'seedprod_error',
-                                    $k['error_msg'],
-                                    'error'
-                                );
-                                // unset invalids
-                                unset($input[$k['id']]);
                             }
-
-                        }
+                        } //end foreach
         
                     }
     	    }
@@ -347,5 +349,5 @@ class _WPSEED {
 
 }
 
-// i=Instantiate class
+// Instantiate class
 $_wpseed = new _WPSEED();

@@ -22,7 +22,7 @@ Copyright 2011  John Turner (email : john@seedprod.com, twitter : @johnturner)
  * Default Constants
  */
 define( '_WPSEED_SHORTNAME', '_wpseed' ); // This is not used but could be if you need it to namespace something.
-define( '_WPSEED_PLUGIN_NAME', 'Coming Soon' ); // This is not used but could be if you need it to namespace something.
+define( '_WPSEED_PLUGIN_NAME', __('WP Seed','_wpseed') ); // This is not used but could be if you need it to namespace something.
 define( '_WPSEED_VERSION', '0.1.0' ); // Plugin Version Number. Recommend you use Semantic Versioning http://semver.org/
 define( '_WPSEED_REQUIRED_WP_VERSION' , '3.0' ); // Required Version of WordPress
 define( '_WPSEED_TEXTDOMAIN' , '_wpseed' ); // Your textdomain
@@ -55,7 +55,8 @@ register_activation_hook(__FILE__, '_wpseed_activation' );
  */
 require_once('framework/framework.php');
 require_once('inc/config.php');
-//require_once('inc/functions.php');
+require_once('inc/helper-functions.php');
+require_once('inc/class-plugin.php');
 
 
 

@@ -1,2 +1,4 @@
 <?php
-// Plugin class logic goes here
+/**
+ * Plugin class logic goes here
+ */
