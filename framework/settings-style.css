@@ -3,3 +3,7 @@
 #icon-options-general {
     background: transparent url(settings-page-icon-36x34.png) no-repeat;
 }
+
+.mceLayout{
+	background-color:#fff;
+}
