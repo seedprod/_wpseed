@@ -55,8 +55,9 @@ register_activation_hook(__FILE__, '_wpseed_activation' );
  */
 require_once('framework/framework.php');
 require_once('inc/config.php');
-require_once('inc/helper-functions.php');
 require_once('inc/class-plugin.php');
+require_once('inc/lib/helper-functions.php');
+
 
 
 
