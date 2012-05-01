@@ -34,6 +34,7 @@ class _WPSEED {
 	    add_action('admin_enqueue_scripts', array(&$this,'admin_enqueue_scripts'));
 	    add_action('admin_menu',array(&$this,'create_menus'));
 	    add_action('admin_init', array(&$this,'create_settings'));
+        add_filter('plugin_action_links', array(&$this,'plugin_action_links'), 10, 2);
 	}
 	 
     /**
@@ -71,6 +72,19 @@ class _WPSEED {
             }
         }
     }
+
+    /**
+     * Display settings link on plugin page
+     */
+    function plugin_action_links($links, $file) {
+        $plugin_file = '_wpseed/_wpseed.php';
+        if ($file == $plugin_file) {
+            $settings_link = '<a href="options-general.php?page=seedprod_coming_soon">Settings</a>';
+            array_unshift($links,$settings_link);
+        }
+        return $links;
+    }
+
 
     /**
      * Allow Tabs on the Settings Page
