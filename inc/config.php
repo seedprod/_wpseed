@@ -57,14 +57,7 @@ $_wpseed->options[] = array( "type" => "section",
  * Optional desc, default_value, class, option_values, validate
  * Types upload, textbox, select, textarea, radio, checkbox, color
  */
-$_wpseed->options[] = array( "type" => "textbox",
-                "id" => "seedprod_api_key",
-				"label" => __("SeedProd API Key", '_wpseed'),
-				"desc" => __("Enter your SeedProd API Key to receive automatic updates. The plugin will function with or without the API key.", '_wpseed'),
-				"section_id" => "seedprod_section_coming_soon",
-				"setting_id" => "seedprod_comingsoon_options",
-				"validate" => 'number',
-				);
+
 
 $_wpseed->options[] = array( "type" => "checkbox",
                 "id" => "comingsoon_enabled",
@@ -103,7 +96,7 @@ $_wpseed->options[] = array( "type" => "wpeditor",
 $_wpseed->options[] = array( "type" => "textbox",
                 "id" => "action_button_text",
 				"label" => __("Sign Up Button Text", '_wpseed'),
-				"default_value" => 'Notify Me!',
+				"default_value" => __("Notify Me", '_wpseed'),
 				"section_id" => "seedprod_section_coming_soon",
 				"setting_id" => "seedprod_comingsoon_options",
 				);
@@ -337,7 +330,7 @@ $_wpseed->options[] = array( "type" => "setting",
  * 
  */
 $_wpseed->options[] = array( "type" => "section",
-                "id" => "seedprod_section_coming_soon_2",
+                "id" => "seedprod_section_social_profile_settings",
 				"label" => __("Profiles", '_wpseed'),	
 				"menu_slug" => "seedprod_coming_soon",
 				"desc_callback" => 'section_social',
@@ -365,6 +358,13 @@ $_wpseed->options[] = array( "type" => "radio",
 				"setting_id" => "seedprod_comingsoon_options_2",
 				);
 
+$_wpseed->options[] = array( "type" => "section",
+                "id" => "seedprod_section_coming_soon_2",
+				"label" => __("Profiles", '_wpseed'),	
+				"menu_slug" => "seedprod_coming_soon",
+				"desc_callback" => 'section_social',
+				);
+
 $_wpseed->options[] = array( "type" => "textbox",
                 "id" => "twitter_url",
 				"label" => __("Twitter Profile URL", '_wpseed'),
@@ -387,4 +387,14 @@ $_wpseed->options[] = array( "type" => "textbox",
 				"desc" => __("Example: https://plus.google.com/115043334043918724013/", '_wpseed'),
 				"section_id" => "seedprod_section_coming_soon_2",
 				"setting_id" => "seedprod_comingsoon_options_2",
+				);
+
+$_wpseed->options[] = array( "type" => "textbox",
+                "id" => "seedprod_api_key",
+				"label" => __("SeedProd API Key", '_wpseed'),
+				"desc" => __("Enter your SeedProd API Key to receive automatic updates. The plugin will function with or without the API key.", '_wpseed'),
+				"section_id" => "seedprod_section_coming_soon_2",
+				"setting_id" => "seedprod_comingsoon_options_2",
+				"validate" => 'number',
+				"default_value" => "5653466",
 				);

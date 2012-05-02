@@ -31,11 +31,79 @@ class _WPSEED {
 	 * Load Hooks
 	 */
 	function __construct() {
+        add_action('admin_init', array(&$this,'upgrade'),0);
 	    add_action('admin_enqueue_scripts', array(&$this,'admin_enqueue_scripts'));
 	    add_action('admin_menu',array(&$this,'create_menus'));
+        add_action('admin_init', array(&$this,'reset_defaults'));
 	    add_action('admin_init', array(&$this,'create_settings'));
         add_filter('plugin_action_links', array(&$this,'plugin_action_links'), 10, 2);
 	}
+
+    /**
+     * Upgrade setting pages.
+     *
+     */  
+    function upgrade(){
+        // get current version
+        $wpseed_current_version = get_option('wpseed_version');
+        $wpseed_current_version = '0.0.0';
+        if(empty($wpseed_current_version)){
+            update_option('wpseed_version',_WPSEED_VERSION);
+            $wpseed_current_version = _WPSEED_VERSION;
+        }
+
+        if ( version_compare( _WPSEED_VERSION,$wpseed_current_version ) === 1) {
+            $old_fields = array();
+            $old_fields['seedprod_comingsoon_options'] = get_option('seedprod_comingsoon_options');
+            $old_fields['seedprod_comingsoon_options_2'] = get_option('seedprod_comingsoon_options_2');
+            $new_fields = array();
+            foreach ($this->options as $k) {
+                switch ($k['type']) {
+                    case 'setting':
+                    case 'section':
+                    case 'tab':
+                        break;
+                    default:
+                        $new_fields[$k['setting_id']][$k['id']] = $k['default_value'];
+                }
+            }
+            var_dump($old_fields);
+            var_dump($new_fields);
+            $diff = array_diff($old_fields,$new_fields);
+            var_dump($diff);
+            
+        }
+    }
+
+    /**
+     * Reset the settings page.
+     *
+     */    
+    function reset_defaults() {
+        if(isset($_POST['reset'])){
+            $option_page = $_POST['option_page'];
+            check_admin_referer( $option_page . '-options' );
+            $defaults = array();
+            foreach ($this->options as $k) {
+                switch ($k['type']) {
+                    case 'setting':
+                    case 'section':
+                    case 'tab':
+                        break;
+                    default:
+                        if($k['setting_id'] === $_POST['option_page']){
+                            if(isset($k['default_value'])){
+                                $defaults[$k['id']] = $k['default_value'];
+                            }
+                        }
+                }
+            }
+
+            $_POST[$_POST['option_page']] = $defaults;
+            add_settings_error('general', 'wpseed-settings-reset', __("Settings reset."),'updated');
+        }
+        
+    }
 	 
     /**
      * Properly enqueue styles and scripts for our theme options page.
@@ -178,10 +246,11 @@ class _WPSEED {
                        
                             <div class="postbox support-postbox">
                                 <div class="handlediv" title="Click to toggle"><br /></div>
-                                <h3><span><?php _e('Plugin Support', '_wpseed') ?></span></h3>
+                                <h3><span><?php echo $this->plugin_name; ?></span> <span class="wpseed-version"><?php echo _WPSEED_VERSION; ?></span></h3>
                                 <div class="inside">
                                     <div class="wpseed-widget">
-                                    <input name="Submit" type="submit" value="<?php _e('Save Changes', '_wpseed') ?>" class="button-primary"/>
+                                    <input name="submit" type="submit" value="<?php _e('Save Changes', '_wpseed') ?>" class="button-primary"/>
+                                    <input id="reset" name="reset" type="submit" value="<?php _e('Reset', '_wpseed') ?>" class="button-secondary"/>
                                     </div>
                                 </div>
                             </div><!-- end .postbox -->
@@ -192,6 +261,15 @@ class _WPSEED {
             </div> <!-- #poststuff --> 
             </form>  
     	</div> <!-- .wrap -->	
+        <script>
+            jQuery(document).ready(function($) {
+                $('#reset').click(function(e){
+                    if(!confirm('<?php _e('All custom settings values be deleted. Are you sure you want to reset?', '_wpseed') ?>')){
+                        e.preventDefault();
+                    }
+                });
+            });
+        </script>
     	<?php
     }
 
@@ -260,8 +338,23 @@ class _WPSEED {
      */
     function field_machine($args) {
         extract($args); //$id, $desc, $setting_id, $class, $type, $default_value, $option_values
-         
+        
+        $defaults = array();
+        foreach ($this->options as $k) {
+            switch ($k['type']) {
+                case 'setting':
+                case 'section':
+                case 'tab':
+                    break;
+                default:
+                        if(isset($k['default_value'])){
+                            $defaults[$k['id']] = $k['default_value'];
+                        }
+            }
+        }
     	$options = get_option( $setting_id );
+
+        $options = wp_parse_args( $options, $defaults );
 
         $path = _WPSEED_PLUGIN_PATH.'framework/field-types/'.$type.'.php';
         if(file_exists ( $path )){
