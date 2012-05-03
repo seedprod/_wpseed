@@ -46,7 +46,6 @@ class _WPSEED {
     function upgrade(){
         // get current version
         $wpseed_current_version = get_option('wpseed_version');
-        $wpseed_current_version = '0.0.0';
         if(empty($wpseed_current_version)){
             update_option('wpseed_version',_WPSEED_VERSION);
             $wpseed_current_version = _WPSEED_VERSION;
@@ -54,8 +53,9 @@ class _WPSEED {
 
         if ( version_compare( _WPSEED_VERSION,$wpseed_current_version ) === 1) {
             $old_fields = array();
-            $old_fields['seedprod_comingsoon_options'] = get_option('seedprod_comingsoon_options');
-            $old_fields['seedprod_comingsoon_options_2'] = get_option('seedprod_comingsoon_options_2');
+            $old_fields = get_option('seedprod_comingsoon_options');
+            $old_fields = $old_fields + get_option('seedprod_comingsoon_options_2');
+
             $new_fields = array();
             foreach ($this->options as $k) {
                 switch ($k['type']) {
@@ -64,13 +64,15 @@ class _WPSEED {
                     case 'tab':
                         break;
                     default:
-                        $new_fields[$k['setting_id']][$k['id']] = $k['default_value'];
+                        if(isset($old_fields[$k['id']])){
+                            $new_fields[$k['setting_id']][$k['id']] = $old_fields[$k['id']];
+                        }
+
+                        
                 }
             }
             var_dump($old_fields);
             var_dump($new_fields);
-            $diff = array_diff($old_fields,$new_fields);
-            var_dump($diff);
             
         }
     }
