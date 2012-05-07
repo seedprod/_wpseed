@@ -15,8 +15,8 @@
  * Create new menus
  */
 $_wpseed->menus[] = array("type" => "add_options_page",
-	            "page_name" => __("Coming Soon", '_wpseed'),
-	            "menu_name" => __("Coming Soon", '_wpseed'),
+	            "page_name" => __("Coming Soon test", '_wpseed'),
+	            "menu_name" => __("Coming Soon test", '_wpseed'),
 	            "capability" => "manage_options",
 	            "menu_slug" => "seedprod_coming_soon",
 	            "callback" => array($_wpseed,'option_page'),

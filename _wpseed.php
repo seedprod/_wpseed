@@ -22,7 +22,7 @@ Copyright 2011  John Turner (email : john@seedprod.com, twitter : @johnturner)
  * Default Constants
  */
 define( '_WPSEED_SHORTNAME', '_wpseed' ); // This is not used but could be if you need it to namespace something.
-define( '_WPSEED_PLUGIN_NAME', __('WP Seed','_wpseed') ); // This is not used but could be if you need it to namespace something.
+define( '_WPSEED_PLUGIN_NAME', __('WP Seed','_wpseed') ); // Plugin Name shows up on the admin settings screen.
 define( '_WPSEED_VERSION', '0.1.0' ); // Plugin Version Number. Recommend you use Semantic Versioning http://semver.org/
 define( '_WPSEED_REQUIRED_WP_VERSION' , '3.0' ); // Required Version of WordPress
 define( '_WPSEED_TEXTDOMAIN' , '_wpseed' ); // Your textdomain
@@ -33,7 +33,7 @@ define( '_WPSEED_PLUGIN_URL', plugin_dir_url(__FILE__) ); // Example output: htt
  * Load Text Domain
  */
 function _wpseed_init() {
-	load_plugin_textdomain('_wpseed', dirname( plugin_basename( __FILE__ ) ) . '/languages/');
+	load_plugin_textdomain('_wpseed', _WPSEED_PLUGIN_PATH . '/languages/');
 }
 add_action('init', '_wpseed_init');
 
@@ -45,7 +45,7 @@ add_action('init', '_wpseed_init');
 function _wpseed_activation() {
     if ( version_compare( get_bloginfo( 'version' ), _WPSEED_REQUIRED_WP_VERSION, '<' ) ) {
         deactivate_plugins( __FILE__  );
-        wp_die( __('WordPress 3.0 and higher required. The plugin has now disabled itself. On a side note why are you running an old version :( Upgrade!','_wpseed') );
+        wp_die( sprintf(__("WordPress %s and higher required. The plugin has now disabled itself. On a side note why are you running an old version :( Upgrade!",'_wpseed'), _WPSEED_REQUIRED_WP_VERSION ));
     }
 }
 register_activation_hook(__FILE__, '_wpseed_activation' );

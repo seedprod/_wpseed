@@ -45,36 +45,36 @@ class _WPSEED {
      */  
     function upgrade(){
         // get current version
-        $wpseed_current_version = get_option('wpseed_version');
-        if(empty($wpseed_current_version)){
-            update_option('wpseed_version',_WPSEED_VERSION);
-            $wpseed_current_version = _WPSEED_VERSION;
+        $_wpseed_current_version = get_option('_wpseed_version');
+        if(empty($_wpseed_current_version)){
+            update_option('_wpseed_version',_WPSEED_VERSION);
+            $_wpseed_current_version = _WPSEED_VERSION;
         }
 
-        if ( version_compare( _WPSEED_VERSION,$wpseed_current_version ) === 1) {
-            $old_fields = array();
-            $old_fields = get_option('seedprod_comingsoon_options');
-            $old_fields = $old_fields + get_option('seedprod_comingsoon_options_2');
+        // if ( version_compare( _WPSEED_VERSION,$_wpseed_current_version ) === 1) {
+        //     $old_fields = array();
+        //     $old_fields = get_option('seedprod_comingsoon_options');
+        //     $old_fields = $old_fields + get_option('seedprod_comingsoon_options_2');
 
-            $new_fields = array();
-            foreach ($this->options as $k) {
-                switch ($k['type']) {
-                    case 'setting':
-                    case 'section':
-                    case 'tab':
-                        break;
-                    default:
-                        if(isset($old_fields[$k['id']])){
-                            $new_fields[$k['setting_id']][$k['id']] = $old_fields[$k['id']];
-                        }
+        //     $new_fields = array();
+        //     foreach ($this->options as $k) {
+        //         switch ($k['type']) {
+        //             case 'setting':
+        //             case 'section':
+        //             case 'tab':
+        //                 break;
+        //             default:
+        //                 if(isset($old_fields[$k['id']])){
+        //                     $new_fields[$k['setting_id']][$k['id']] = $old_fields[$k['id']];
+        //                 }
 
                         
-                }
-            }
-            var_dump($old_fields);
-            var_dump($new_fields);
+        //         }
+        //     }
+        //     var_dump($old_fields);
+        //     var_dump($new_fields);
             
-        }
+        // }
     }
 
     /**
@@ -102,7 +102,7 @@ class _WPSEED {
             }
 
             $_POST[$_POST['option_page']] = $defaults;
-            add_settings_error('general', 'wpseed-settings-reset', __("Settings reset."),'updated');
+            add_settings_error('general', '_wpseed-settings-reset', __("Settings reset."),'updated');
         }
         
     }
@@ -148,8 +148,9 @@ class _WPSEED {
      */
     function plugin_action_links($links, $file) {
         $plugin_file = '_wpseed/_wpseed.php';
+
         if ($file == $plugin_file) {
-            $settings_link = '<a href="options-general.php?page=seedprod_coming_soon">Settings</a>';
+            $settings_link = '<a href="options-general.php?page='.$this->menus[0]['menu_slug'].'">Settings</a>';
             array_unshift($links,$settings_link);
         }
         return $links;
@@ -202,7 +203,7 @@ class _WPSEED {
     function option_page() {
         $page = $_REQUEST['page'];
     	?>
-    	<div class="wrap columns-2 wpseed">
+    	<div class="wrap columns-2 _wpseed">
     	    <?php screen_icon(); ?>
     		<h2><?php echo $this->plugin_name; ?></h2>
 			<?php $this->plugin_options_tabs(); ?>
@@ -232,8 +233,9 @@ class _WPSEED {
 												$current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 												if($current_tab == $tab['id'] or $current_tab === false){	
                             				        echo '<div class="postbox seedprod-postbox"><div class="handlediv" title="Click to toggle"><br /></div>';
-                                            		$this->wpseed_do_settings_sections($v['id']);
+                                            		$this->do_settings_sections($v['id']);
                                         		    echo '</div>';
+                                                    //do_settings_sections($v['id']);
 												}
                                     		    break;
                     		    
@@ -242,17 +244,18 @@ class _WPSEED {
         		                }
                             }
                             ?>
-                    	    
+                    <input name="submit" type="submit" value="<?php _e('Save Changes', '_wpseed') ?>" class="button-primary"/>
+                    <input id="reset" name="reset" type="submit" value="<?php _e('Reset', '_wpseed') ?>" class="button-secondary"/>    
                     </div> <!-- #post-body-content -->
+
                     <div id="postbox-container-1" class="postbox-container">
                        
                             <div class="postbox support-postbox">
                                 <div class="handlediv" title="Click to toggle"><br /></div>
-                                <h3><span><?php echo $this->plugin_name; ?></span> <span class="wpseed-version"><?php echo _WPSEED_VERSION; ?></span></h3>
+                                <h3><span><?php echo $this->plugin_name; ?></span> <span class="_wpseed-version"><?php echo _WPSEED_VERSION; ?></span></h3>
                                 <div class="inside">
-                                    <div class="wpseed-widget">
-                                    <input name="submit" type="submit" value="<?php _e('Save Changes', '_wpseed') ?>" class="button-primary"/>
-                                    <input id="reset" name="reset" type="submit" value="<?php _e('Reset', '_wpseed') ?>" class="button-secondary"/>
+                                    <div class="_wpseed-widget">
+                                        Sample Postbox
                                     </div>
                                 </div>
                             </div><!-- end .postbox -->
@@ -438,7 +441,7 @@ class _WPSEED {
     *
     * @since 0.1.0
     */
-    function wpseed_do_settings_sections($page) {
+    function do_settings_sections($page) {
      global $wp_settings_sections, $wp_settings_fields;
 
      if ( !isset($wp_settings_sections) || !isset($wp_settings_sections[$page]) )
