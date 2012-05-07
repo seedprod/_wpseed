@@ -3,6 +3,7 @@
  * Check to see if a value is a valid hex color
  * Test $input[$k['id']]
  * Set $k['error_msg'] and $is_valid
+ * Set $is_valid = true/false
  */
 
 

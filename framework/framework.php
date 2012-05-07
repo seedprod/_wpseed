@@ -51,10 +51,11 @@ class _WPSEED {
             $_wpseed_current_version = _WPSEED_VERSION;
         }
 
+        // Sample script to update field if it's changed to a different tab.
         // if ( version_compare( _WPSEED_VERSION,$_wpseed_current_version ) === 1) {
         //     $old_fields = array();
-        //     $old_fields = get_option('seedprod_comingsoon_options');
-        //     $old_fields = $old_fields + get_option('seedprod_comingsoon_options_2');
+        //     $old_fields = get_option('wpseed_options_1');
+        //     $old_fields = $old_fields + get_option('wpseed_options_1');
 
         //     $new_fields = array();
         //     foreach ($this->options as $k) {
@@ -78,7 +79,7 @@ class _WPSEED {
     }
 
     /**
-     * Reset the settings page.
+     * Reset the settings page. Reset works per seetings id.
      *
      */    
     function reset_defaults() {
@@ -132,7 +133,7 @@ class _WPSEED {
      *
      * This function is attached to the admin_menu action hook.
      *
-     * @since 0.1
+     * @since 0.1.0
      */
     function create_menus(){
         foreach ($this->menus as $v) {
