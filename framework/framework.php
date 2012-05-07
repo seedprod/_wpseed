@@ -208,10 +208,10 @@ class _WPSEED {
     		<h2><?php echo $this->plugin_name; ?></h2>
 			<?php $this->plugin_options_tabs(); ?>
 
-            <form action="options.php" method="post">
     		<div id="poststuff">
                 <div id="post-body" class="metabox-holder columns-2">
                     <div id="post-body-content" >
+                    <form action="options.php" method="post">
                             <?php
                             foreach ($this->options as $v) {
                                 if(isset($v['menu_slug'])){
@@ -246,6 +246,7 @@ class _WPSEED {
                             ?>
                     <input name="submit" type="submit" value="<?php _e('Save Changes', '_wpseed') ?>" class="button-primary"/>
                     <input id="reset" name="reset" type="submit" value="<?php _e('Reset', '_wpseed') ?>" class="button-secondary"/>    
+                    </form>  
                     </div> <!-- #post-body-content -->
 
                     <div id="postbox-container-1" class="postbox-container">
@@ -264,7 +265,6 @@ class _WPSEED {
                     </div> <!-- #postbox-container-1 -->
                 </div> <!-- #post-body --> 
             </div> <!-- #poststuff --> 
-            </form>  
     	</div> <!-- .wrap -->	
         <script>
             jQuery(document).ready(function($) {
