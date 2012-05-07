@@ -117,8 +117,9 @@ class _WPSEED {
      */
     function admin_enqueue_scripts( $hook_suffix ) {
         if(!in_array($hook_suffix, $this->pages))
-            return;
+            return; 
 
+        wp_enqueue_script( 'dashboard' );
     	wp_enqueue_script( 'seedprod-framework-js', _WPSEED_PLUGIN_URL . 'framework/settings-scripts.js', array( 'jquery' ), $this->plugin_version );
         wp_enqueue_style( 'thickbox' );
         wp_enqueue_style( 'media-upload' );
