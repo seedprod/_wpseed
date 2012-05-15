@@ -21,21 +21,13 @@ Copyright 2011  John Turner (email : john@seedprod.com, twitter : @johnturner)
 /**
  * Default Constants
  */
-define( '_WPSEED_SHORTNAME', '_wpseed' ); // This is not used but could be if you need it to namespace something.
+define( '_WPSEED_SHORTNAME', '_wpseed' ); // Used to reference namespace functions.
+define( '_WPSEED_TEXTDOMAIN' , '_wpseed' ); // Your textdomain
 define( '_WPSEED_PLUGIN_NAME', __('WP Seed','_wpseed') ); // Plugin Name shows up on the admin settings screen.
 define( '_WPSEED_VERSION', '0.1.0' ); // Plugin Version Number. Recommend you use Semantic Versioning http://semver.org/
 define( '_WPSEED_REQUIRED_WP_VERSION' , '3.0' ); // Required Version of WordPress
-define( '_WPSEED_TEXTDOMAIN' , '_wpseed' ); // Your textdomain
 define( '_WPSEED_PLUGIN_PATH', plugin_dir_path(__FILE__)); // Example output: /Applications/MAMP/htdocs/wordpress/wp-content/plugins/_wpseed/
 define( '_WPSEED_PLUGIN_URL', plugin_dir_url(__FILE__) ); // Example output: http://localhost:8888/wordpress/wp-content/plugins/_wpseed/
-
-/**
- * Load Text Domain
- */
-function _wpseed_init() {
-	load_plugin_textdomain('_wpseed', _WPSEED_PLUGIN_PATH . '/languages/');
-}
-add_action('init', '_wpseed_init');
 
 /**
  * Upon activation of the plugin, see if we are running the required version and deploy theme in defined.
@@ -56,7 +48,7 @@ register_activation_hook(__FILE__, '_wpseed_activation' );
 require_once('framework/framework.php');
 require_once('inc/config.php');
 require_once('inc/class-plugin.php');
-require_once('inc/lib/helper-functions.php');
+require_once('inc/helper-functions.php');
 
 
 

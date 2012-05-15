@@ -13,14 +13,10 @@
 
 /**
  * Create new menus
+ * Required: type => "add_options_page|"
  */
 $_wpseed->menus[] = array("type" => "add_options_page",
 	            "page_name" => __("WPSeed", '_wpseed'),
-	            "menu_name" => __("WPSeed", '_wpseed'),
-	            "capability" => "manage_options",
-	            "menu_slug" => "seedprod_coming_soon",
-	            "callback" => array($_wpseed,'option_page'),
-	            "icon_url" => plugins_url('framework/seedprod-icon-16x16.png',dirname(__FILE__)),
                 );
 
 /**
@@ -29,7 +25,7 @@ $_wpseed->menus[] = array("type" => "add_options_page",
 $_wpseed->options[] = array("type" => "tab",
 	            "id" => "seedprod_section_coming_soon_tab",
 				"label" => __("Settings", '_wpseed'),	
-				"menu_slug" => "seedprod_coming_soon"
+				"menu_slug" => "wpseed"
 				);
                        
 /**
@@ -38,7 +34,7 @@ $_wpseed->options[] = array("type" => "tab",
  */
 $_wpseed->options[] = array( "type" => "setting",
                 "id" => "seedprod_comingsoon_options",
-				"menu_slug" => "seedprod_coming_soon"
+				"menu_slug" => "wpseed"
 				);
 				
 /**
@@ -48,7 +44,7 @@ $_wpseed->options[] = array( "type" => "setting",
 $_wpseed->options[] = array( "type" => "section",
                 "id" => "seedprod_section_coming_soon",
 				"label" => __("Settings", '_wpseed'),	
-				"menu_slug" => "seedprod_coming_soon"
+				"menu_slug" => "wpseed"
 				);
 
 /**

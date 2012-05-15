@@ -31,6 +31,7 @@ class _WPSEED {
 	 * Load Hooks
 	 */
 	function __construct() {
+        add_action('init', array(&$this,'init'));
         add_action('admin_init', array(&$this,'upgrade'),0);
 	    add_action('admin_enqueue_scripts', array(&$this,'admin_enqueue_scripts'));
 	    add_action('admin_menu',array(&$this,'create_menus'));
@@ -38,6 +39,13 @@ class _WPSEED {
 	    add_action('admin_init', array(&$this,'create_settings'));
         add_filter('plugin_action_links', array(&$this,'plugin_action_links'), 10, 2);
 	}
+
+    /**
+     * Load Text Domain
+     */
+    function init() {
+        load_plugin_textdomain( _WPSEED_TEXTDOMAIN , _WPSEED_PLUGIN_PATH . '/languages/');
+    }
 
     /**
      * Upgrade setting pages.
@@ -121,11 +129,11 @@ class _WPSEED {
             return; 
 
         wp_enqueue_script( 'dashboard' );
-    	wp_enqueue_script( 'seedprod-framework-js', _WPSEED_PLUGIN_URL . 'framework/settings-scripts.js', array( 'jquery' ), $this->plugin_version );
+    	wp_enqueue_script( '_wpseed-framework-js', _WPSEED_PLUGIN_URL . 'framework/settings-scripts.js', array( 'jquery' ), $this->plugin_version );
         wp_enqueue_style( 'thickbox' );
         wp_enqueue_style( 'media-upload' );
         wp_enqueue_style( 'farbtastic' ); 
-    	wp_enqueue_style( 'seedprod-framework-css', _WPSEED_PLUGIN_URL . 'framework/settings-style.css', false, $this->plugin_version );
+    	wp_enqueue_style( '_wpseed-framework-css', _WPSEED_PLUGIN_URL . 'framework/settings-style.css', false, $this->plugin_version );
     }
 
     /**
@@ -136,7 +144,20 @@ class _WPSEED {
      * @since 0.1.0
      */
     function create_menus(){
-        foreach ($this->menus as $v) {
+        foreach ($this->menus as $k=>$v) {
+            if(empty($v['menu_name'])){
+               $v['menu_name'] = $v['page_name'];
+            }
+            if(empty($v['capability'])){
+               $v['capability'] = 'manage_options';
+            }
+            if(empty($v['callback'])){
+               $v['callback'] = array(&$this,'option_page');
+            }
+            if(empty($v['menu_slug'])){
+               $v['menu_slug'] = sanitize_title($v['page_name']);
+               $this->menus[$k]['menu_slug'] = $v['menu_slug'];
+            }
             if($v['type'] == 'add_submenu_page'){
                 $this->pages[] = call_user_func_array($v['type'],array($v['parent_slug'],$v['page_name'],$v['menu_name'],$v['capability'],$v['menu_slug'],$v['callback']));
             }else{
