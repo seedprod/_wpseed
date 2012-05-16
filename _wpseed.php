@@ -22,6 +22,7 @@ Copyright 2011  John Turner (email : john@seedprod.com, twitter : @johnturner)
  * Default Constants
  */
 define( '_WPSEED_SHORTNAME', '_wpseed' ); // Used to reference namespace functions.
+define( '_WPSEED_FILE', '_wpseed/_wpseed.php' ); // Used for settings link.
 define( '_WPSEED_TEXTDOMAIN' , '_wpseed' ); // Your textdomain
 define( '_WPSEED_PLUGIN_NAME', __('WP Seed','_wpseed') ); // Plugin Name shows up on the admin settings screen.
 define( '_WPSEED_VERSION', '0.1.0' ); // Plugin Version Number. Recommend you use Semantic Versioning http://semver.org/

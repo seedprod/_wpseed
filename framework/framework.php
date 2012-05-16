@@ -170,7 +170,7 @@ class _WPSEED {
      * Display settings link on plugin page
      */
     function plugin_action_links($links, $file) {
-        $plugin_file = '_wpseed/_wpseed.php';
+        $plugin_file = _WPSEED_FILE;
 
         if ($file == $plugin_file) {
             $settings_link = '<a href="options-general.php?page='.$this->menus[0]['menu_slug'].'">Settings</a>';
@@ -320,6 +320,7 @@ class _WPSEED {
                 		$k['id'],
                 		$k['validate_function']
                 	);
+                    $setting_id = $k['id'];
                 	break;
             	case 'section':
             	    if(empty($k['desc_callback'])){
@@ -333,6 +334,7 @@ class _WPSEED {
                 		$k['desc_callback'],
                 		$k['id']
                 	);
+                    $section_id = $k['id'];
                 	break;
 				case 'tab':
 					break;
@@ -340,15 +342,16 @@ class _WPSEED {
                 	if(empty($k['callback'])){
             	        $k['callback'] = array(&$this,'field_machine');
             	    }
+
                 	add_settings_field(
                 		$k['id'],
                 		$k['label'],
                 		$k['callback'],
-                		$k['section_id'],
-                		$k['section_id'],
+                		$section_id ,
+                		$section_id ,
                 		array('id' => $k['id'], 
                 		'desc' => (isset($k['desc']) ? $k['desc'] : ''),
-                		'setting_id' => $k['setting_id'], 
+                		'setting_id' => $setting_id, 
                 		'class' => (isset($k['class']) ? $k['class'] : ''), 
                 		'type' => $k['type'],
                 		'default_value' => (isset($k['default_value']) ? $k['default_value'] : ''),
