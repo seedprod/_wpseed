@@ -151,6 +151,9 @@ class _WPSEED {
                 if(empty($v['callback'])){
                    $v['callback'] = array(&$this,'option_page');
                 }
+                if(empty($v['icon_url'])){
+                   $v['icon_url'] = _WPSEED_PLUGIN_URL.'framework/settings-menu-icon-16x16.png';
+                }
                 if(empty($v['menu_slug'])){
                    $v['menu_slug'] = sanitize_title($v['page_name']);
                    $this->menus[$k]['menu_slug'] = $v['menu_slug'];
@@ -432,7 +435,6 @@ class _WPSEED {
             include( $path );
             // Show description
             if(!empty($desc)){
-                echo "<br>";
                 echo "<small class='description'>{$desc}</small>";
             }
         }
