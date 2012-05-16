@@ -1,4 +1,5 @@
 // For Color Field Type
+
 jQuery(document).ready(function($){
     // Color Picker
     $('.pickcolor').click( function(e) {
