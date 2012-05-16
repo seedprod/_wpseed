@@ -15,9 +15,11 @@
  * Create new menus
  * Required: type => "add_options_page|"
  */
-$_wpseed->menus[] = array("type" => "add_options_page",
+$_wpseed->options[] = array("type" =>  "menu",
+				"menu_type" => "add_options_page",
 	            "page_name" => __("WPSeed", '_wpseed'),
-	            "menu_slug" => "wpseed"
+	            "menu_slug" => "wpseed",
+	            "layout" => "2-col"
                 );
 
 /**
@@ -26,7 +28,6 @@ $_wpseed->menus[] = array("type" => "add_options_page",
 $_wpseed->options[] = array("type" => "tab",
 	            "id" => "wpseed_tab_1",
 				"label" => __("Settings", '_wpseed'),	
-				"menu_slug" => "wpseed"
 				);
                        
 /**
@@ -35,7 +36,6 @@ $_wpseed->options[] = array("type" => "tab",
  */
 $_wpseed->options[] = array( "type" => "setting",
                 "id" => "wpseed_settings_1",
-				"menu_slug" => "wpseed"
 				);
 				
 /**
@@ -45,7 +45,6 @@ $_wpseed->options[] = array( "type" => "setting",
 $_wpseed->options[] = array( "type" => "section",
                 "id" => "wpseed_section_1",
 				"label" => __("Settings", '_wpseed'),	
-				"menu_slug" => "wpseed"
 				);
 
 /**
@@ -188,7 +187,6 @@ $_wpseed->options[] = array( "type" => "textbox",
 $_wpseed->options[] = array( "type" => "section",
                 "id" => "wpseed_section_3",
 				"label" => __("SignUp Incentive and Twitter Button", '_wpseed'),	
-				"menu_slug" => "wpseed",
 				//"desc_callback" => 'section_incentive',
 				);
 				
@@ -242,8 +240,8 @@ $_wpseed->options[] = array( "type" => "textbox",
  */					
 $_wpseed->options[] = array( "type" => "tab",
                 "id" => "wpseed_tab_2",
-				"label" => __("Social Profiles", '_wpseed'),	
-				"menu_slug" => "wpseed");
+				"label" => __("Social Profiles", '_wpseed'),
+				);	
 			
 /**
  * New Setting
@@ -251,7 +249,6 @@ $_wpseed->options[] = array( "type" => "tab",
  */			
 $_wpseed->options[] = array( "type" => "setting",
                 "id" => "wpseed_settings_2",
-				"menu_slug" => "wpseed"
 				);
 			
 /**
@@ -261,7 +258,6 @@ $_wpseed->options[] = array( "type" => "setting",
 $_wpseed->options[] = array( "type" => "section",
                 "id" => "wpseed_section_4",
 				"label" => __("Profiles", '_wpseed'),	
-				"menu_slug" => "wpseed",
 				"desc_callback" => 'section_social',
 				);
 
@@ -286,7 +282,6 @@ $_wpseed->options[] = array( "type" => "radio",
 $_wpseed->options[] = array( "type" => "section",
                 "id" => "wpseed_section_5",
 				"label" => __("Profiles", '_wpseed'),	
-				"menu_slug" => "seedprod_coming_soon",
 				"desc_callback" => 'section_social',
 				);
 

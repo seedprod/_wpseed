@@ -13,11 +13,6 @@ class _WPSEED {
     public $plugin_name = _WPSEED_PLUGIN_NAME;
 
     /**
-     * Holds pages created by create_menu
-     */
-    public $menus = array();
-
-    /**
      * Holds defined menus
      */
     public $pages = array();
@@ -34,7 +29,7 @@ class _WPSEED {
         add_action('init', array(&$this,'init'));
         add_action('admin_init', array(&$this,'upgrade'),0);
 	    add_action('admin_enqueue_scripts', array(&$this,'admin_enqueue_scripts'));
-	    add_action('admin_menu',array(&$this,'create_menus'));
+	    add_action('admin_menu', array(&$this,'create_menus'));
         add_action('admin_init', array(&$this,'reset_defaults'));
 	    add_action('admin_init', array(&$this,'create_settings'));
         add_filter('plugin_action_links', array(&$this,'plugin_action_links'), 10, 2);
@@ -87,7 +82,7 @@ class _WPSEED {
     }
 
     /**
-     * Reset the settings page. Reset works per seetings id.
+     * Reset the settings page. Reset works per settings id.
      *
      */    
     function reset_defaults() {
@@ -97,6 +92,7 @@ class _WPSEED {
             $defaults = array();
             foreach ($this->options as $k) {
                 switch ($k['type']) {
+                    case 'menu':
                     case 'setting':
                     case 'section':
                     case 'tab':
@@ -144,24 +140,26 @@ class _WPSEED {
      * @since 0.1.0
      */
     function create_menus(){
-        foreach ($this->menus as $k=>$v) {
-            if(empty($v['menu_name'])){
-               $v['menu_name'] = $v['page_name'];
-            }
-            if(empty($v['capability'])){
-               $v['capability'] = 'manage_options';
-            }
-            if(empty($v['callback'])){
-               $v['callback'] = array(&$this,'option_page');
-            }
-            if(empty($v['menu_slug'])){
-               $v['menu_slug'] = sanitize_title($v['page_name']);
-               $this->menus[$k]['menu_slug'] = $v['menu_slug'];
-            }
-            if($v['type'] == 'add_submenu_page'){
-                $this->pages[] = call_user_func_array($v['type'],array($v['parent_slug'],$v['page_name'],$v['menu_name'],$v['capability'],$v['menu_slug'],$v['callback']));
-            }else{
-                $this->pages[] = call_user_func_array($v['type'],array($v['page_name'],$v['menu_name'],$v['capability'],$v['menu_slug'],$v['callback'],$v['icon_url']));
+        foreach ($this->options as $k=>$v) {
+            if($v['type'] == 'menu'){
+                if(empty($v['menu_name'])){
+                   $v['menu_name'] = $v['page_name'];
+                }
+                if(empty($v['capability'])){
+                   $v['capability'] = 'manage_options';
+                }
+                if(empty($v['callback'])){
+                   $v['callback'] = array(&$this,'option_page');
+                }
+                if(empty($v['menu_slug'])){
+                   $v['menu_slug'] = sanitize_title($v['page_name']);
+                   $this->menus[$k]['menu_slug'] = $v['menu_slug'];
+                }
+                if($v['menu_type'] == 'add_submenu_page'){
+                    $this->pages[] = call_user_func_array($v['menu_type'],array($v['parent_slug'],$v['page_name'],$v['menu_name'],$v['capability'],$v['menu_slug'],$v['callback']));
+                }else{
+                    $this->pages[] = call_user_func_array($v['menu_type'],array($v['page_name'],$v['menu_name'],$v['capability'],$v['menu_slug'],$v['callback'],$v['icon_url']));
+                }
             }
         }
     }
@@ -219,27 +217,53 @@ class _WPSEED {
 	}
 
     /**
+     * Allow Tabs on the Settings Page
+     *
+     */
+    function get_page_layout() {
+        $layout = 'classic';
+        foreach ($this->options as $v) {
+            switch ($v['type']) {
+                case 'menu';
+                    $page = $_REQUEST['page'];
+                    if($page == $v['menu_slug']){
+                        if(isset($v['layout'])){
+                            $layout = $v['layout'];
+                        }   
+                    }
+                    break;
+            }
+        }
+        return $layout;
+    }
+
+    /**
      * Render the option pages.
      *
      * @since 0.1.0
      */
     function option_page() {
         $page = $_REQUEST['page'];
+        $layout = $this->get_page_layout();
     	?>
     	<div class="wrap columns-2 _wpseed">
     	    <?php screen_icon(); ?>
     		<h2><?php echo $this->plugin_name; ?></h2>
 			<?php $this->plugin_options_tabs(); ?>
 
+            <?php if($layout == '2-col'): ?>
     		<div id="poststuff">
                 <div id="post-body" class="metabox-holder columns-2">
                     <div id="post-body-content" >
+            <?php endif; ?>
                     <form action="options.php" method="post">
                             <?php
                             foreach ($this->options as $v) {
                                 if(isset($v['menu_slug'])){
                                     if($v['menu_slug'] == $page){
                                         switch ($v['type']) {
+                                            case 'menu';
+                                                break;
 											case 'tab';
 												$tab = $v;
 												if(empty($default_tab))
@@ -255,10 +279,13 @@ class _WPSEED {
                         				    case 'section':
 												$current_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : $default_tab;
 												if($current_tab == $tab['id'] or $current_tab === false){	
+                                                    if($layout == '2-col'){
                             				        echo '<div class="postbox seedprod-postbox"><div class="handlediv" title="Click to toggle"><br /></div>';
                                             		$this->do_settings_sections($v['id']);
                                         		    echo '</div>';
-                                                    //do_settings_sections($v['id']);
+                                                    }else{
+                                                        do_settings_sections($v['id']);
+                                                    }
 												}
                                     		    break;
                     		    
@@ -269,7 +296,8 @@ class _WPSEED {
                             ?>
                     <input name="submit" type="submit" value="<?php _e('Save Changes', '_wpseed') ?>" class="button-primary"/>
                     <input id="reset" name="reset" type="submit" value="<?php _e('Reset', '_wpseed') ?>" class="button-secondary"/>    
-                    </form>  
+                    </form> 
+                    <?php if($layout == '2-col'): ?> 
                     </div> <!-- #post-body-content -->
 
                     <div id="postbox-container-1" class="postbox-container">
@@ -288,6 +316,7 @@ class _WPSEED {
                     </div> <!-- #postbox-container-1 -->
                 </div> <!-- #post-body --> 
             </div> <!-- #poststuff --> 
+            <?php endif; ?>
     	</div> <!-- .wrap -->	
         <script>
             jQuery(document).ready(function($) {
@@ -309,53 +338,59 @@ class _WPSEED {
      * @since 0.1.0
      */
     function create_settings(){
-        foreach ($this->options as $k) {
-            switch ($k['type']) {
+        foreach ($this->options as $k=>$v) {
+            switch ($v['type']) {
+                case 'menu':
+                    $menu_slug = $v['menu_slug'];
+                    break;
                 case 'setting':
-                    if(empty($k['validate_function'])){
-            	        $k['validate_function'] = array(&$this,'validate_machine');
+                    if(empty($v['validate_function'])){
+            	        $v['validate_function'] = array(&$this,'validate_machine');
             	    }
                 	register_setting(
-                		$k['id'],
-                		$k['id'],
-                		$k['validate_function']
+                		$v['id'],
+                		$v['id'],
+                		$v['validate_function']
                 	);
-                    $setting_id = $k['id'];
+                    $setting_id = $v['id'];
+                    $this->options[$k]['menu_slug'] = $menu_slug;
                 	break;
             	case 'section':
-            	    if(empty($k['desc_callback'])){
-            	        $k['desc_callback'] = array(&$this,'__return_empty_string');
+            	    if(empty($v['desc_callback'])){
+            	        $v['desc_callback'] = array(&$this,'__return_empty_string');
             	    }else{
-            	        $k['desc_callback'] = array(&$this, $k['desc_callback']);
+            	        $v['desc_callback'] = array(&$this, $v['desc_callback']);
             	    }
                 	add_settings_section(
-                		$k['id'],
-                		$k['label'],
-                		$k['desc_callback'],
-                		$k['id']
+                		$v['id'],
+                		$v['label'],
+                		$v['desc_callback'],
+                		$v['id']
                 	);
-                    $section_id = $k['id'];
+                    $section_id = $v['id'];
+                    $this->options[$k]['menu_slug'] = $menu_slug;
                 	break;
 				case 'tab':
+                    $this->options[$k]['menu_slug'] = $menu_slug;
 					break;
             	default:
-                	if(empty($k['callback'])){
-            	        $k['callback'] = array(&$this,'field_machine');
+                	if(empty($v['callback'])){
+            	        $v['callback'] = array(&$this,'field_machine');
             	    }
 
                 	add_settings_field(
-                		$k['id'],
-                		$k['label'],
-                		$k['callback'],
+                		$v['id'],
+                		$v['label'],
+                		$v['callback'],
                 		$section_id ,
                 		$section_id ,
-                		array('id' => $k['id'], 
-                		'desc' => (isset($k['desc']) ? $k['desc'] : ''),
+                		array('id' => $v['id'], 
+                		'desc' => (isset($v['desc']) ? $v['desc'] : ''),
                 		'setting_id' => $setting_id, 
-                		'class' => (isset($k['class']) ? $k['class'] : ''), 
-                		'type' => $k['type'],
-                		'default_value' => (isset($k['default_value']) ? $k['default_value'] : ''),
-                		'option_values' => (isset($k['option_values']) ? $k['option_values'] : ''))
+                		'class' => (isset($v['class']) ? $v['class'] : ''), 
+                		'type' => $v['type'],
+                		'default_value' => (isset($v['default_value']) ? $v['default_value'] : ''),
+                		'option_values' => (isset($v['option_values']) ? $v['option_values'] : ''))
                 	);
             	    
     	    }
@@ -412,6 +447,7 @@ class _WPSEED {
 
         foreach ($this->options as $k) {
             switch($k['type']){
+                case 'menu':
                 case 'setting':
                 case 'section':
                 case 'tab';
