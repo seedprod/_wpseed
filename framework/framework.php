@@ -131,9 +131,7 @@ class _WPSEED
             return;
         
         wp_enqueue_script( 'dashboard' );
-        wp_enqueue_script( '_wpseed-framework-js', _WPSEED_PLUGIN_URL . 'framework/settings-scripts.js', array(
-             'jquery' 
-        ), $this->plugin_version );
+        wp_enqueue_script( '_wpseed-framework-js', _WPSEED_PLUGIN_URL . 'framework/settings-scripts.js', array( 'jquery' ), $this->plugin_version );
         wp_enqueue_style( 'thickbox' );
         wp_enqueue_style( 'media-upload' );
         wp_enqueue_style( 'farbtastic' );
