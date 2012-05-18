@@ -27,34 +27,14 @@ class _WPSEED
      */
     function __construct( )
     {
-        add_action( 'init', array(
-            &$this,
-            'init' 
-        ) );
-        add_action( 'admin_init', array(
-            &$this,
-            'upgrade' 
-        ), 0 );
-        add_action( 'admin_enqueue_scripts', array(
-            &$this,
-            'admin_enqueue_scripts' 
-        ) );
-        add_action( 'admin_menu', array(
-            &$this,
-            'create_menus' 
-        ) );
-        add_action( 'admin_init', array(
-            &$this,
-            'reset_defaults' 
-        ) );
-        add_action( 'admin_init', array(
-            &$this,
-            'create_settings' 
-        ) );
-        add_filter( 'plugin_action_links', array(
-            &$this,
-            'plugin_action_links' 
-        ), 10, 2 );
+        add_action( 'init', array( &$this, 'init' ) );
+        add_action( 'init', array( &$this, 'get_options' ) );
+        add_action( 'admin_init', array( &$this, 'upgrade' ), 0 );
+        add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_scripts'  ) );
+        add_action( 'admin_menu', array( &$this, 'create_menus'  ) );
+        add_action( 'admin_init', array( &$this, 'reset_defaults' ) );
+        add_action( 'admin_init', array( &$this, 'create_settings' ) );
+        add_filter( 'plugin_action_links', array( &$this, 'plugin_action_links' ), 10, 2 );
     }
     
     /**
@@ -159,6 +139,26 @@ class _WPSEED
         wp_enqueue_style( 'farbtastic' );
         wp_enqueue_style( '_wpseed-framework-css', _WPSEED_PLUGIN_URL . 'framework/settings-style.css', false, $this->plugin_version );
     }
+
+    /**
+     * Get all option settings
+     *
+     * @since 0.1.0
+     */
+    function get_options( )
+    {
+        $settings = array( );
+        foreach ( $this->options as $k ) {
+            switch ( $k[ 'type' ] ) {
+                case 'setting':
+                    $settings = $settings + get_option( $k[ 'id' ] ); 
+                    break;
+            }
+        }
+
+        return $settings;
+    }
+
     
     /**
      * Creates WordPress Menu pages from an array in the config file.

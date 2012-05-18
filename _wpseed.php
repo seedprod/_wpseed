@@ -51,3 +51,5 @@ require_once( 'framework/framework.php' );
 require_once( 'inc/config.php' );
 require_once( 'inc/class-plugin.php' );
 require_once( 'inc/helper-functions.php' );
+
+var_dump( $_wpseed->get_options() );
