@@ -134,9 +134,9 @@ $_wpseed->options[ ] = array(
     "label" => __( "Select", '_wpseed' ),
     "default_value" => "bottom-center",
     "option_values" => array(
-        "bottom-left" => "Bottom Left",
-        "bottom-center" => "Bottom Center",
-        "bottom-right" => "Bottom Right" 
+        "bottom-left" => __( "Bottom Left", '_wpseed' ),
+        "bottom-center" => __( "Bottom Center", '_wpseed' ),
+        "bottom-right" => __( "Bottom Right", '_wpseed' )
     ) 
 );
 
