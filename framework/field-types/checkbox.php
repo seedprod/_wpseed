@@ -5,7 +5,7 @@
 // $options[$id] value from the db
 
 $c = 0;
-foreach($option_values as $k=>$v){
-    echo "<input type='checkbox' name='{$setting_id}[$id][]' value='$k' ".(in_array($k,(empty($options[$id]) ? array() : $options[$id])) ? 'checked' : '')."  /> $v<br/>";
+foreach ( $option_values as $k => $v ) {
+    echo "<input type='checkbox' name='{$setting_id}[$id][]' value='$k' " . ( in_array( $k, ( empty( $options[ $id ] ) ? array( ) : $options[ $id ] ) ) ? 'checked' : '' ) . "  /> $v<br/>";
     $c++;
 }

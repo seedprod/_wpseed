@@ -4,7 +4,10 @@
 // $id - setting id
 // $options[$id] value from the db
 
-$content = $options[$id];
+$content   = $options[ $id ];
 $editor_id = $id;
-$args = array('textarea_name'=>"{$setting_id}[$id]"); // Optional arguments.
+$args      = array(
+     'textarea_name' => "{$setting_id}[$id]" 
+); 
+
 wp_editor( $content, $editor_id, $args );

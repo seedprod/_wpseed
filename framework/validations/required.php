@@ -5,7 +5,7 @@
  * Set $k['error_msg'] and $is_valid
  */
 
-if(empty($input[$k['id']])){
-	$is_valid = false;
-	$error_msg = $k['label'] . ' ' . __('is required.', '_wpseed');
+if ( empty( $input[ $k[ 'id' ] ] ) ) {
+    $is_valid  = false;
+    $error_msg = $k[ 'label' ] . ' ' . __( 'is required.', '_wpseed' );
 }

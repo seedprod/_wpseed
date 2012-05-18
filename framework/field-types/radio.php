@@ -4,6 +4,6 @@
 // $id - setting id
 // $options[$id] value from the db
 
-foreach($option_values as $k=>$v){
-    echo "<input type='radio' name='{$setting_id}[$id]' value='$k' ".checked($options[$id],$k, false)."  /> $v<br/>";
+foreach ( $option_values as $k => $v ) {
+    echo "<input type='radio' name='{$setting_id}[$id]' value='$k' " . checked( $options[ $id ], $k, false ) . "  /> $v<br/>";
 }

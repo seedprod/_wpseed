@@ -4,4 +4,4 @@
 // $id - setting id
 // $options[$id] value from the db
 
-echo "<textarea id='$id' class='".(empty($class) ? '' : $class)."' name='{$setting_id}[$id]'>".$options[$id]."</textarea>";
+echo "<textarea id='$id' class='" . ( empty( $class ) ? '' : $class ) . "' name='{$setting_id}[$id]'>" . $options[ $id ] . "</textarea>";
