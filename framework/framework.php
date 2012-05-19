@@ -186,7 +186,7 @@ class _WPSEED
                 }
                 if ( empty( $v[ 'menu_slug' ] ) ) {
                     $v[ 'menu_slug' ]                 = sanitize_title( $v[ 'page_name' ] );
-                    $this->menus[ $k ][ 'menu_slug' ] = $v[ 'menu_slug' ];
+                    $this->options[ $k ][ 'menu_slug' ] = $v[ 'menu_slug' ];
                 }
                 if ( $v[ 'menu_type' ] == 'add_submenu_page' ) {
                     $this->pages[ ] = call_user_func_array( $v[ 'menu_type' ], array(
@@ -219,7 +219,7 @@ class _WPSEED
         $plugin_file = _WPSEED_FILE;
         
         if ( $file == $plugin_file ) {
-            $settings_link = '<a href="options-general.php?page=' . $this->menus[ 0 ][ 'menu_slug' ] . '">Settings</a>';
+            $settings_link = '<a href="options-general.php?page=' . $this->options[ 0 ][ 'menu_slug' ] . '">Settings</a>';
             array_unshift( $links, $settings_link );
         }
         return $links;
