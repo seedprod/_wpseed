@@ -28,7 +28,7 @@ class _WPSEED
     function __construct( )
     {
         add_action( 'init', array( &$this, 'init' ) );
-        add_action( 'init', array( &$this, 'get_options' ) );
+        //add_action( 'init', array( &$this, 'get_options' ) );
         add_action( 'admin_init', array( &$this, 'upgrade' ), 0 );
         add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_scripts'  ) );
         add_action( 'admin_menu', array( &$this, 'create_menus'  ) );
